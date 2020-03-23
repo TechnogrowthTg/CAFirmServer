@@ -23,6 +23,31 @@ function getClientGroupName(req, res) {
     });
 }
 
+
+/**
+ * This function represent to get ClientContact from ClientContact Master
+ * @param {*} req 
+ * @param {*} res 
+ * @author Amol Dhamale
+ */
+
+function getClientContactName(req, res) {
+    var query = "SELECT `ContactId`, concat(client_contact.ContactPersonName, '_', client_contact.Email, '_', client_contact.MobileNumber1) as ClientContact FROM `client_contact` WHERE IsDeleted=1 ORDER BY ContactId DESC";
+    mysqlQuery.excecuteQuery(query, function (error, result) {
+        if (error) {
+            return res.json({
+                error: true,
+                message: error
+            });
+        } else {
+            return res.json({
+                error: false,
+                result: result
+            })
+        }
+    });
+}
+
 /**
  * This function represent to insert record to Client Master
  * @param {*} req 
@@ -43,7 +68,7 @@ function addNewClient(req, res) {
             if (checkResult[0].cnt == 0) {
                 var query = "INSERT INTO `client`( `GroupId`, `ClientName`, `ClientContact`, `ClientEmail`, `ClientCode`, `ClientGstNumber`, `PanNumber`, `AdharNumber`, `ClientAddress`, `TypeOfEntity`, `CurrentStatus`, `AgreementStatus`, `	IncorporationDate`, `IsDeleted`) VALUES ('" + param.GroupId + "','" + param.ClientName + "','" + param.ClientContact + "','" + param.ClientEmail + "','" + param.ClientCode + "','" + param.ClientGstNumber + "', '" + param.PanNumber + "' ,'" + param.AdharNumber + "', '" + param.ClientAddress + "','" + param.TypeOfEntity + "', '" + param.CurrentStatus + "', '" + param.AgreementStatus + "','" + param.IncorporationDate + "',1)";
                 mysqlQuery.excecuteQuery(query, function (error, result) {
-
+                    
                     if (error) {
                         return res.json({
                             error: true,
@@ -167,6 +192,7 @@ function deleteClientById(req, res) {
 
 module.exports = {
     getClientGroupName: getClientGroupName,
+    getClientContactName: getClientContactName,
     addNewClient: addNewClient,
     getAllClient: getAllClient,
     getClientById: getClientById,
