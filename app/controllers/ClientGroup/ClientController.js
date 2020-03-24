@@ -5,7 +5,6 @@ var mysqlQuery = require('../../common/mysqlConnection');
  * @param {*} res 
  * @author Amol Dhamale
  */
-
 function getClientGroupName(req, res) {
     var query = "SELECT `GroupId`, concat(client_group.GroupName,'_',client_group.GroupShortName ) as GroupName FROM `client_group` WHERE IsDeleted=1 ORDER BY GroupId DESC";
     mysqlQuery.excecuteQuery(query, function (error, result) {
@@ -81,6 +80,7 @@ function addNewClient(req, res) {
                         })
                     }
                 })
+
             } else {
                 return res.json({
                     error: true,
@@ -99,7 +99,7 @@ function addNewClient(req, res) {
  * @author Amol Dhamale
  */
 function getAllClient(req, res) {
-    var query = "SELECT ClientId, (SELECT concat(client_group.GroupName,'_',client_group.GroupShortName ) FROM `client_group` WHERE client.GroupId=client_group.GroupId ) as ClientGroupName , `ClientName`, `ClientContact`, `ClientEmail`, `ClientCode`, `ClientGstNumber`, `PanNumber`, `AdharNumber`, `ClientAddress`, `TypeOfEntity`, `CurrentStatus`, `AgreementStatus`, `IncorporationDate` FROM client JOIN client_group on client.GroupId=client_group.GroupId WHERE client.IsDeleted=1 ORDER by client.ClientId DESC";
+    var query = "SELECT ClientId, (SELECT concat(client_group.GroupName,'_',client_group.GroupShortName ) FROM `client_group` WHERE client.GroupId=client_group.GroupId ) as ClientGroupName , `ClientName`, `ClientContact`, `ClientEmail`, `ClientCode`, `GstNumber`, `PanNumber`, `AdharNumber`, `ClientAddress`, `TypeOfEntity`, `CurrentStatus`, `AgreementStatus`, `IncorporationDate` FROM client JOIN client_group on client.GroupId=client_group.GroupId WHERE client.IsDeleted=1 ORDER by client.ClientId DESC";
     mysqlQuery.excecuteQuery(query, function (error, result) {
         if (error) {
             return res.json({
@@ -123,7 +123,7 @@ function getAllClient(req, res) {
  */
 function getClientById(req, res) {
     var id = req.params.ClientId;
-    var query = "SELECT ClientId, (SELECT concat(client_group.GroupName,'_',client_group.GroupShortName ) FROM `client_group` WHERE client.GroupId=client_group.GroupId ) as ClientGroupName , `ClientName`, `ClientContact`, `ClientEmail`, `ClientCode`, `ClientGstNumber`, `PanNumber`, `AdharNumber`, `ClientAddress`, `TypeOfEntity`, `CurrentStatus`, `AgreementStatus`, `IncorporationDate` FROM client JOIN client_group on client.GroupId=client_group.GroupId WHERE client.IsDeleted=1 and client.ClientId=" + id;
+    var query = "SELECT ClientId, (SELECT concat(client_group.GroupName,'_',client_group.GroupShortName ) FROM `client_group` WHERE client.GroupId=client_group.GroupId ) as ClientGroupName , `ClientName`, `ClientContact`, `ClientEmail`, `ClientCode`, `GstNumber`, `PanNumber`, `AdharNumber`, `ClientAddress`, `TypeOfEntity`, `CurrentStatus`, `AgreementStatus`, `IncorporationDate` FROM client JOIN client_group on client.GroupId=client_group.GroupId WHERE client.IsDeleted=1 and client.ClientId=" + id;
     mysqlQuery.excecuteQuery(query, function (error, result) {
         if (error) {
             return res.json({
@@ -134,6 +134,30 @@ function getClientById(req, res) {
             return res.json({
                 error: false,
                 result: result[0]
+            })
+        }
+    });
+}
+
+/**
+ * This function represent to get ClientContactPersonList by ClientId from Client_Client_ContactMaster.
+ * @param {*} req 
+ * @param {*} res 
+ * @author Amol Dhamale
+ */
+function getClientContactList(req, res) {
+    var id = req.params.ClientId;
+    var query = "SELECT client_contact.ContactId, concat(client_contact.ContactPersonName, '_', client_contact.Email, '_', client_contact.MobileNumber1) as ClientContactPersonName FROM client_contact JOIN client_client_contact on client_contact.ContactId=client_client_contact.ContactId WHERE client_client_contact.ClientId=" + id;
+    mysqlQuery.excecuteQuery(query, function (error, result) {
+        if (error) {
+            return res.json({
+                error: true,
+                message: error
+            });
+        } else {
+            return res.json({
+                error: false,
+                result: result
             })
         }
     });
@@ -173,7 +197,7 @@ function updateClientById(req, res) {
  */
 function deleteClientById(req, res) {
     var id = req.body.ClientId;
-    var query = "UPDATE client JOIN client_group on client.GroupId=client_group.GroupId SET client.IsDeleted=0, client_group.IsDeleted=0 WHERE client.ClientId=" + id;
+    var query = "UPDATE `client` SET `IsDeleted`='0' WHERE `ClientId`=" + id;
     mysqlQuery.excecuteQuery(query, function (error, result) {
         if (error) {
             return res.json({
@@ -196,6 +220,7 @@ module.exports = {
     addNewClient: addNewClient,
     getAllClient: getAllClient,
     getClientById: getClientById,
+    getClientContactList: getClientContactList,
     updateClientById: updateClientById,
     deleteClientById: deleteClientById
 }
