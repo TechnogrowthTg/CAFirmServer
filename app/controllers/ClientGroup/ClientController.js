@@ -1,10 +1,11 @@
 var mysqlQuery = require('../../common/mysqlConnection');
 /**
- * This function represent to get ClientGroupName from ClientGroup Master
+ * This function represent to get ClientGroupName from client_group Master
  * @param {*} req 
  * @param {*} res 
  * @author Amol Dhamale
  */
+// To get the dropdown data for ClientGroupName from client_group Master.
 function getClientGroupName(req, res) {
     var query = "SELECT `GroupId`, concat(client_group.GroupName,'_',client_group.GroupShortName ) as GroupName FROM `client_group` WHERE IsDeleted=1 ORDER BY GroupId DESC";
     mysqlQuery.excecuteQuery(query, function (error, result) {
@@ -24,12 +25,12 @@ function getClientGroupName(req, res) {
 
 
 /**
- * This function represent to get ClientContact from ClientContact Master
+ * This function represent to get ClientContact from client_contact Master
  * @param {*} req 
  * @param {*} res 
  * @author Amol Dhamale
  */
-
+// To get the dropdown data for ClientContactPersonName from client_contact Master.
 function getClientContactName(req, res) {
     var query = "SELECT `ContactId`, concat(client_contact.ContactPersonName, '_', client_contact.Email, '_', client_contact.MobileNumber1) as ClientContact FROM `client_contact` WHERE IsDeleted=1 ORDER BY ContactId DESC";
     mysqlQuery.excecuteQuery(query, function (error, result) {
@@ -63,11 +64,9 @@ function addNewClient(req, res) {
                 message: error
             });
         } else {
-
             if (checkResult[0].cnt == 0) {
-                var query = "INSERT INTO `client`( `GroupId`, `ClientName`, `ClientContact`, `ClientEmail`, `ClientCode`, `ClientGstNumber`, `PanNumber`, `AdharNumber`, `ClientAddress`, `TypeOfEntity`, `CurrentStatus`, `AgreementStatus`, `	IncorporationDate`, `IsDeleted`) VALUES ('" + param.GroupId + "','" + param.ClientName + "','" + param.ClientContact + "','" + param.ClientEmail + "','" + param.ClientCode + "','" + param.ClientGstNumber + "', '" + param.PanNumber + "' ,'" + param.AdharNumber + "', '" + param.ClientAddress + "','" + param.TypeOfEntity + "', '" + param.CurrentStatus + "', '" + param.AgreementStatus + "','" + param.IncorporationDate + "',1)";
+                var query = "INSERT INTO `client`( `GroupId`, `ClientName`, `ClientContact`, `ClientEmail`, `ClientCode`, `GstNumber`, `PanNumber`, `AdharNumber`, `ClientAddress`, `TypeOfEntity`, `CurrentStatus`, `AgreementStatus`, `IncorporationDate`, `CreatedDate`, `IsDeleted`) VALUES ('" + param.GroupId + "','" + param.ClientName + "','" + param.ClientContact + "','" + param.ClientEmail + "','" + param.ClientCode + "','" + param.GstNumber + "', '" + param.PanNumber + "' ,'" + param.AdharNumber + "', '" + param.ClientAddress + "','" + param.TypeOfEntity + "', '" + param.CurrentStatus + "', '" + param.AgreementStatus + "','" + param.IncorporationDate + "',now(),1)";
                 mysqlQuery.excecuteQuery(query, function (error, result) {
-                    
                     if (error) {
                         return res.json({
                             error: true,
@@ -163,31 +162,31 @@ function getClientContactList(req, res) {
     });
 }
 
-
 /**
  * This function represent to update a client by his/her ClientId to Client Master
  * @param {*} req 
  * @param {*} res 
  * @author Amol Dhamale
  */
-function updateClientById(req, res) {
-    var param = req.body;
-    var id = req.body.ClientId;
-    var query = "UPDATE `client` JOIN `client_group` ON client.GroupId=client_group.GroupId SET `client.GroupId`='" + param.GroupId + "', `client.ClientName`='" + param.ClientName + "',`client.ClientContact`='" + param.ClientContact + "',`client.ClientEmail`='" + param.ClientEmail + "',`client.ClientCode` ='" + param.ClientCode + "',`client.ClientGstNumber` ='" + param.ClientGstNumber + "',`client.PanNumber`='" + param.PanNumber + "',`client.AdharNumber`='" + param.AdharNumber + "',`client.ClientAddress`='" + param.ClientAddress + "',`client.TypeOfEntity`='" + param.TypeOfEntity + "',`client.CurrentStatus`='" + param.CurrentStatus + "',`client.AgreementStatus`='" + param.AgreementStatus + "',`client.IncorporationDate`='" + param.IncorporationDate + "' WHERE client.IsDeleted=1 and client_group.IsDeleted=1 and client.ClientId=" + id;
-    mysqlQuery.excecuteQuery(query, function (error, result) {
-        if (error) {
-            return res.json({
-                error: true,
-                message: error
-            });
-        } else {
-            return res.json({
-                error: false,
-                message: "Record Updated Successfully"
-            })
-        }
-    });
-}
+// function updateClientById(req, res) {
+//     var param = req.body;
+//     var id = req.body.ClientId;
+//     var query = "UPDATE `client` JOIN `client_group` ON client.GroupId=client_group.GroupId SET `client.GroupId`='" + param.GroupId + "', `client.ClientName`='" + param.ClientName + "',`client.ClientContact`='" + param.ClientContact + "',`client.ClientEmail`='" + param.ClientEmail + "',`client.ClientCode` ='" + param.ClientCode + "',`client.GstNumber` ='" + param.GstNumber + "',`client.PanNumber`='" + param.PanNumber + "',`client.AdharNumber`='" + param.AdharNumber + "',`client.ClientAddress`='" + param.ClientAddress + "',`client.TypeOfEntity`='" + param.TypeOfEntity + "',`client.CurrentStatus`='" + param.CurrentStatus + "',`client.AgreementStatus`='" + param.AgreementStatus + "',`client.IncorporationDate`='" + param.IncorporationDate + "' WHERE client.IsDeleted=1 and client_group.IsDeleted=1 and client.ClientId=" + id;
+//     mysqlQuery.excecuteQuery(query, function (error, result) {
+//         if (error) {
+//             return res.json({
+//                 error: true,
+//                 message: error
+//             });
+//         } else {
+//             return res.json({
+//                 error: false,
+//                 message: "Record Updated Successfully"
+//             })
+//         }
+//     });
+// }
+
 
 /**
  * This function represent to delete a client by his/her ClientId from Client Master
@@ -221,6 +220,6 @@ module.exports = {
     getAllClient: getAllClient,
     getClientById: getClientById,
     getClientContactList: getClientContactList,
-    updateClientById: updateClientById,
+    // updateClientById: updateClientById,
     deleteClientById: deleteClientById
 }
