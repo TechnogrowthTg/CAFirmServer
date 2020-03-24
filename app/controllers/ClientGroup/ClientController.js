@@ -168,24 +168,24 @@ function getClientContactList(req, res) {
  * @param {*} res 
  * @author Amol Dhamale
  */
-// function updateClientById(req, res) {
-//     var param = req.body;
-//     var id = req.body.ClientId;
-//     var query = "UPDATE `client` JOIN `client_group` ON client.GroupId=client_group.GroupId SET `client.GroupId`='" + param.GroupId + "', `client.ClientName`='" + param.ClientName + "',`client.ClientContact`='" + param.ClientContact + "',`client.ClientEmail`='" + param.ClientEmail + "',`client.ClientCode` ='" + param.ClientCode + "',`client.GstNumber` ='" + param.GstNumber + "',`client.PanNumber`='" + param.PanNumber + "',`client.AdharNumber`='" + param.AdharNumber + "',`client.ClientAddress`='" + param.ClientAddress + "',`client.TypeOfEntity`='" + param.TypeOfEntity + "',`client.CurrentStatus`='" + param.CurrentStatus + "',`client.AgreementStatus`='" + param.AgreementStatus + "',`client.IncorporationDate`='" + param.IncorporationDate + "' WHERE client.IsDeleted=1 and client_group.IsDeleted=1 and client.ClientId=" + id;
-//     mysqlQuery.excecuteQuery(query, function (error, result) {
-//         if (error) {
-//             return res.json({
-//                 error: true,
-//                 message: error
-//             });
-//         } else {
-//             return res.json({
-//                 error: false,
-//                 message: "Record Updated Successfully"
-//             })
-//         }
-//     });
-// }
+function updateClientById(req, res) {
+    var param = req.body;
+    var id = req.body.ClientId;
+    var query = "UPDATE `client` JOIN `client_group` ON client.GroupId=client_group.GroupId SET `client.GroupId`='" + param.GroupId + "', `client.ClientName`='" + param.ClientName + "',`client.ClientContact`='" + param.ClientContact + "',`client.ClientEmail`='" + param.ClientEmail + "',`client.ClientCode` ='" + param.ClientCode + "',`client.GstNumber` ='" + param.GstNumber + "',`client.PanNumber`='" + param.PanNumber + "',`client.AdharNumber`='" + param.AdharNumber + "',`client.ClientAddress`='" + param.ClientAddress + "',`client.TypeOfEntity`='" + param.TypeOfEntity + "',`client.CurrentStatus`='" + param.CurrentStatus + "',`client.AgreementStatus`='" + param.AgreementStatus + "',`client.IncorporationDate`='" + param.IncorporationDate + "' WHERE client.ClientId=" + id;
+    mysqlQuery.excecuteQuery(query, function (error, result) {
+        if (error) {
+            return res.json({
+                error: true,
+                message: error
+            });
+        } else {
+            return res.json({
+                error: false,
+                message: "Record Updated Successfully"
+            })
+        }
+    });
+}
 
 
 /**
@@ -220,6 +220,6 @@ module.exports = {
     getAllClient: getAllClient,
     getClientById: getClientById,
     getClientContactList: getClientContactList,
-    // updateClientById: updateClientById,
+    updateClientById: updateClientById,
     deleteClientById: deleteClientById
 }
