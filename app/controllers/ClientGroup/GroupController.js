@@ -6,7 +6,7 @@ var mysqlQuery = require('../../common/mysqlConnection');
  * @param {*} res 
  * @author Amol Dhamale
  */
-function addNewClientGroup(req, res) {
+function addNewGroup(req, res) {
     var param = req.body;
     var isGroupExits = "SELECT COUNT(`GroupName` and `GroupContact`) as cnt FROM `client_group` WHERE `GroupName` = '" + param.GroupName + "' and `GroupContact`= '" + param.GroupContact + "'";
     mysqlQuery.excecuteQuery(isGroupExits, function (error, checkResult) {
@@ -50,8 +50,8 @@ function addNewClientGroup(req, res) {
  * @param {*} res 
  * @author Amol Dhamale
  */
-function getAllClientGroup(req, res) {
-    var query = "SELECT `GroupId`, `GroupName`, `GroupShortName`, `GroupContact` FROM `client_group` WHERE IsDeleted = 1 ORDER by GroupId DESC"
+function getAllGroup(req, res) {
+    var query = "SELECT `GroupId`, `GroupName`, `GroupShortName`, `GroupContact` FROM `client_group` WHERE IsDeleted = 1 ORDER by GroupId DESC";
     mysqlQuery.excecuteQuery(query, function (error, result) {
         if (error) {
             return res.json({
@@ -73,7 +73,7 @@ function getAllClientGroup(req, res) {
  * @param {*} res 
  * @author Amol Dhamale
  */
-function getClientGroupById(req, res) {
+function getGroupById(req, res) {
     var id = req.params.GroupId;
     var query = "SELECT `GroupId`, `GroupName`, `GroupShortName`, `GroupContact` FROM `client_group` WHERE IsDeleted=1 and GroupId=" + id;
     mysqlQuery.excecuteQuery(query, function (error, result) {
@@ -97,10 +97,9 @@ function getClientGroupById(req, res) {
  * @param {*} res 
  * @author Amol Dhamale
  */
-
-function updateClientGroupById(req, res) {
+function updateGroup(req, res) {
     var param = req.body;
-    isClientGroupExits(param.GroupName, function (error, result_groupname) {
+    isGroupExits(param.GroupName, function (error, result_groupname) {
         if (error)
             return res.json({
                 error: true,
@@ -110,10 +109,10 @@ function updateClientGroupById(req, res) {
         if (groupcount) {
             return res.json({
                 error: true,
-                message: "ClientGroup is already exits!"
+                message: "Group Already Exits"
             })
         } else {
-            var query = "UPDATE client_group SET `GroupName`= '" + param.GroupName + "',`GroupShortName`= '" + param.GroupShortName + "',`GroupContact`= '" + param.GroupContact + "',`UpdatedDate` = CURRENT_TIMESTAMP() WHERE client_group.GroupId=" + param.GroupId;
+            var query = "UPDATE client_group SET `GroupName`= '" + param.GroupName + "',`GroupShortName`= '" + param.GroupShortName + "',`GroupContact`= '" + param.GroupContact + "', `UpdatedDate` = CURRENT_TIMESTAMP() WHERE GroupId=" + param.GroupId;
             mysqlQuery.excecuteQuery(query, function (error, result) {
                 if (error)
                     return res.json({
@@ -123,15 +122,15 @@ function updateClientGroupById(req, res) {
                 else
                     return res.json({
                         error: false,
-                        message: "Client Group Updated successfully"
+                        message: "Record Updated successfully"
                     })
             })
         }
     })
 }
 
-// This function is to check whether the groupname is exits in group table or not.
-function isClientGroupExits(GroupName, callback) {
+// To check whether the group is exist or not
+function isGroupExits(GroupName, callback) {
     var qry = "SELECT count(GroupName) as cnt FROM `client_group` WHERE GroupName like '" + GroupName + "' ";
     mysqlQuery.excecuteQuery(qry, function (error, result) {
         if (error)
@@ -150,9 +149,9 @@ function isClientGroupExits(GroupName, callback) {
  * @param {*} res 
  * @author Amol Dhamale
  */
-function deleteClientGroupById(req, res) {
-    var id = req.body.GroupId;
-    var query = "UPDATE `client_group` SET `IsDeleted`='0' WHERE `GroupId`=" + id;
+function deleteGroup(req, res) {
+    var param = req.body;
+    var query = "UPDATE `client_group` SET `IsDeleted`='0' WHERE `GroupId`=" + param.GroupId;
     mysqlQuery.excecuteQuery(query, function (error, result) {
         if (error) {
             return res.json({
@@ -170,9 +169,9 @@ function deleteClientGroupById(req, res) {
 
 
 module.exports = {
-    addNewClientGroup: addNewClientGroup,
-    getAllClientGroup: getAllClientGroup,
-    getClientGroupById: getClientGroupById,
-    updateClientGroupById: updateClientGroupById,
-    deleteClientGroupById: deleteClientGroupById
+    addNewGroup: addNewGroup,
+    getAllGroup: getAllGroup,
+    getGroupById: getGroupById,
+    updateGroup: updateGroup,
+    deleteGroup: deleteGroup
 }

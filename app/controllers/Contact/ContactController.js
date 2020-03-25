@@ -6,7 +6,7 @@ var mysqlQuery = require('../../common/mysqlConnection');
  * @param {*} res 
  * @author Amol Dhamale
  */
-function addNewClientContact(req, res) {
+function addNewContact(req, res) {
     var param = req.body;
     var isContactExits = "SELECT COUNT(`ContactPersonName` and `Email`) as cnt FROM `client_contact` WHERE `ContactPersonName` = '" + param.ContactPersonName + "' and `Email`= '" + param.Email + "'";
     mysqlQuery.excecuteQuery(isContactExits, function (error, checkResult) {
@@ -50,7 +50,7 @@ function addNewClientContact(req, res) {
  * @param {*} res 
  * @author Amol Dhamale
  */
-function getAllClientContact(req, res) {
+function getAllContact(req, res) {
     var query = 'SELECT `ContactId`, `ContactPersonName`, `Email`, `Designation`, `MobileNumber1`, `MobileNumber2`, `Telephone`, `Address`, `Reference`, `CurrentStatus`, `IsBroadService` FROM `client_contact` WHERE IsDeleted = 1 ORDER by ContactId DESC';
     mysqlQuery.excecuteQuery(query, function (error, result) {
         if (error) {
@@ -73,7 +73,7 @@ function getAllClientContact(req, res) {
  * @param {*} res 
  * @author Amol Dhamale
  */
-function getClientContactById(req, res) {
+function getContactById(req, res) {
     var id = req.params.ContactId;
     var query = 'SELECT `ContactId`, `ContactPersonName`, `Email`, `Designation`, `MobileNumber1`, `MobileNumber2`, `Telephone`, `Address`, `Reference`, `CurrentStatus`, `IsBroadService` FROM `client_contact` WHERE IsDeleted = 1 and ContactId=' + id;
     mysqlQuery.excecuteQuery(query, function (error, result) {
@@ -91,29 +91,28 @@ function getClientContactById(req, res) {
     });
 }
 
-
 /**
  * This function represent to update a client contact by his/her ContactId to client_contact Master
  * @param {*} req 
  * @param {*} res 
  * @author Amol Dhamale
  */
-function updateClientContactById(req, res) {
+function updateContact(req, res) {
     var param = req.body;
-    isClientContactExits(param.ContactPersonName, function (error, result_personname) {
+    isContactExits(param.ContactPersonName, function (error, result_contact) {
         if (error)
             return res.json({
                 error: true,
                 message: "Invalid fields"
             })
-        var personcount = result_personname;
-        if (personcount) {
+        var contactcount = result_contact;
+        if (contactcount) {
             return res.json({
                 error: true,
-                message: "Contact Person is already exits!"
+                message: "Contact Already Exits"
             })
         } else {
-            var query = "UPDATE `client_contact` SET `ContactPersonName`= '" + param.ContactPersonName + "',`Email`= '" + param.Email + "',`Designation`= '" + param.Designation + "',`MobileNumber1`= '" + param.MobileNumber1 + "',`MobileNumber2`= '" + param.MobileNumber2 + "',`Telephone`= '" + param.Telephone + "',`Address`= '" + param.Address + "',`Reference`= '" + param.Reference + "',`CurrentStatus`= '" + param.CurrentStatus + "',`IsBroadService`= '" + param.IsBroadService + "',`UpdatedDate` = CURRENT_TIMESTAMP() WHERE client_contact.ContactId=" + param.ContactId;
+            var query = "UPDATE `client_contact` SET `ContactPersonName`= '" + param.ContactPersonName + "',`Email`= '" + param.Email + "',`Designation`= '" + param.Designation + "',`MobileNumber1`= '" + param.MobileNumber1 + "',`MobileNumber2`= '" + param.MobileNumber2 + "',`Telephone`= '" + param.Telephone + "',`Address`= '" + param.Address + "',`Reference`= '" + param.Reference + "',`CurrentStatus`= '" + param.CurrentStatus + "',`IsBroadService`= '" + param.IsBroadService + "',`UpdatedDate` = CURRENT_TIMESTAMP() WHERE ContactId=" + param.ContactId;
             mysqlQuery.excecuteQuery(query, function (error, result) {
                 if (error)
                     return res.json({
@@ -123,15 +122,15 @@ function updateClientContactById(req, res) {
                 else
                     return res.json({
                         error: false,
-                        message: "Client Contact Updated successfully"
+                        message: "Record Updated successfully"
                     })
             })
         }
     })
 }
 
-// This function is to check whether the ClientContact is exits in ClientContact table or not.
-function isClientContactExits(ContactPersonName, callback) {
+// To check whether the ContactPersonName is exist or not
+function isContactExits(ContactPersonName, callback) {
     var qry = "SELECT count(ContactPersonName) as cnt FROM `client_contact` WHERE ContactPersonName like '" + ContactPersonName + "' ";
     mysqlQuery.excecuteQuery(qry, function (error, result) {
         if (error)
@@ -143,13 +142,15 @@ function isClientContactExits(ContactPersonName, callback) {
 
     })
 }
+
+
 /**
  * This function represent to delete a client contact by his/her ClientId from client_contact Master
  * @param {*} req 
  * @param {*} res 
  * @author Amol Dhamale
  */
-function deleteClientContactById(req, res) {
+function deleteContact(req, res) {
     var id = req.body.ContactId;
     var query = "UPDATE `client_contact` SET `IsDeleted`='0' WHERE `ContactId`=" + id;
     mysqlQuery.excecuteQuery(query, function (error, result) {
@@ -169,9 +170,9 @@ function deleteClientContactById(req, res) {
 
 
 module.exports = {
-    addNewClientContact: addNewClientContact,
-    getAllClientContact: getAllClientContact,
-    getClientContactById: getClientContactById,
-    updateClientContactById: updateClientContactById,
-    deleteClientContactById: deleteClientContactById
+    addNewContact: addNewContact,
+    getAllContact: getAllContact,
+    getContactById: getContactById,
+    updateContact: updateContact,
+    deleteContact: deleteContact
 }
