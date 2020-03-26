@@ -16,16 +16,21 @@ app.use(bodyParser.json({
 
 app.use('/', express.static(path.join(__dirname, 'public')))
 
-var AuthRoute = require('./app/routes/Authentication/AuthenticationRoute');
-var ClientGroupRoute = require('./app/routes/ClientGroup/GroupRoute');
-var ClientRoute = require('./app/routes/ClientGroup/ClientRoute');
-var ContactRoute = require('./app/routes/Contact/ContactRoute');
-var ServiceRoute = require('./app/routes/Service/ServiceRoute');
+// var AuthRoute = require('./app/routes/Authentication/AuthenticationRoute');
+var ClientGroupRoute = require('./app/routes/ClientGroup/client.group.route');
+var ClientRoute = require('./app/routes/Client/client.route');
+var ContactRoute = require('./app/routes/Contact/contact.route');
+var ServiceGroupRoute = require('./app/routes/Service/service.group.route');
+var SubServiceGroupRoute = require('./app/routes/Service/service.sub.group.route');
+// var ServiceRoute = require('./app/routes/Service/ServiceRoute');
+// var ServiceRoute = require('./app/routes/Service/ServiceRoute');
+// var ServiceRoute = require('./app/routes/Service/ServiceRoute');
 
-app.use('/auth', AuthRoute)
+// app.use('/auth', AuthRoute)
 app.use('/group', ClientGroupRoute);
 app.use('/client', ClientRoute);
 app.use('/contact', ContactRoute)
-app.use('/service', ServiceRoute);
+app.use('/serviceGroup', ServiceGroupRoute);
+app.use('/subserviceGroup', SubServiceGroupRoute);
 
 app.listen(port, () => console.log(`server listening on port ${port}!`));
