@@ -101,51 +101,22 @@ const getServicePayById = (req, res) => {
  * @param {*} res 
  * @author Amol Dhamale
  */
+
 const updateServicePay = (req, res) => {
     var data = req.body;
-    isAmountExits(data.DefaultAmount, function (err, result) {
+    var query = "UPDATE service_pay SET `DefaultAmount`= '" + data.DefaultAmount + "',`PeriodOfService`= '" + data.PeriodOfService + "', `UpdatedDate` = CURRENT_TIMESTAMP() WHERE ServicePayId=" + data.ServicePayId;
+    DbConnect.query(query, function (err, result) {
         if (err)
             res.status(401).json({
                 success: false,
                 error: err,
-                message: 'Invalid fields'
+                message: 'Something went wrong. Please try again'
             });
-        var amountcount = result;
-        if (amountcount) {
-            res.status(401).json({
-                success: false,
-                error: err,
-                message: 'Defaul Amount Already Exits'
-            });
-        } else {
-            var query = "UPDATE service_pay SET `DefaultAmount`= '" + data.DefaultAmount + "',`PeriodOfService`= '" + data.PeriodOfService + "', `UpdatedDate` = CURRENT_TIMESTAMP() WHERE ServicePayId=" + data.ServicePayId;
-            DbConnect.query(query, function (err, result) {
-                if (err)
-                    res.status(401).json({
-                        success: false,
-                        error: err,
-                        message: 'Something went wrong. Please try again'
-                    });
-                else
-                    res.status(200).json({
-                        success: true,
-                        message: 'Record Updated successfully'
-                    });
-            });
-        }
-    })
-}
-
-// To check whether the Default Amount is exits or not.
-isAmountExits = (DefaultAmount, callback) => {
-    var qry = "SELECT count(DefaultAmount) as cnt FROM `service_pay` WHERE DefaultAmount like '" + DefaultAmount + "' ";
-    DbConnect.query(qry, function (err, result) {
-        if (err)
-            callback(err, null);
-        if (result[0].cnt > 0)
-            callback(null, true);
         else
-            callback(null, false);
+            res.status(200).json({
+                success: true,
+                message: 'Record Updated successfully'
+            });
     });
 }
 

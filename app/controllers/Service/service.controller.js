@@ -183,6 +183,7 @@ const getServiceById = (req, res) => {
  * @param {*} res 
  * @author Amol Dhamale
  */
+
 const updateService = (req, res) => {
     var data = req.body;
     var query = "UPDATE `service` SET `ServiceGroupId`='" + data.ServiceGroupId + "', `ServiceSubGroupId`='" + data.ServiceSubGroupId + "',`PayTypeId`='" + data.PayTypeId + "',`ServicePayId` ='" + data.ServicePayId + "', `UpdatedDate` = CURRENT_TIMESTAMP() WHERE `ServiceId`=" + data.ServiceId;

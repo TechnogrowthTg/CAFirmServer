@@ -101,51 +101,22 @@ const getSubServiceGroupById = (req, res) => {
  * @param {*} res 
  * @author Amol Dhamale
  */
+
 const updateSubServiceGroup = (req, res) => {
     var data = req.body;
-    isSubServiceGroupExits(data.ServiceSubGroupName, function (err, result) {
+    var query = "UPDATE service_sub_group SET `ServiceSubGroupName`= '" + data.ServiceSubGroupName + "', `UpdatedDate` = CURRENT_TIMESTAMP() WHERE ServiceSubGroupId=" + data.ServiceSubGroupId;
+    DbConnect.query(query, function (err, result) {
         if (err)
             res.status(401).json({
                 success: false,
                 error: err,
-                message: 'Invalid fields'
+                message: 'Something went wrong. Please try again'
             });
-        var subservicecount = result;
-        if (subservicecount) {
-            res.status(401).json({
-                success: false,
-                error: err,
-                message: 'SubService Group Already Exits'
-            });
-        } else {
-            var query = "UPDATE service_sub_group SET `ServiceSubGroupName`= '" + data.ServiceSubGroupName + "', `UpdatedDate` = CURRENT_TIMESTAMP() WHERE ServiceSubGroupId=" + data.ServiceSubGroupId;
-            DbConnect.query(query, function (err, result) {
-                if (err)
-                    res.status(401).json({
-                        success: false,
-                        error: err,
-                        message: 'Something went wrong. Please try again'
-                    });
-                else
-                    res.status(200).json({
-                        success: true,
-                        message: 'Record Updated successfully'
-                    });
-            });
-        }
-    })
-}
-
-// To check whether the Service Group is exits or not.
-isSubServiceGroupExits = (ServiceSubGroupName, callback) => {
-    var qry = "SELECT count(ServiceSubGroupName) as cnt FROM `service_sub_group` WHERE ServiceSubGroupName like '" + ServiceSubGroupName + "' ";
-    DbConnect.query(qry, function (err, result) {
-        if (err)
-            callback(err, null);
-        if (result[0].cnt > 0)
-            callback(null, true);
         else
-            callback(null, false);
+            res.status(200).json({
+                success: true,
+                message: 'Record Updated successfully'
+            });
     });
 }
 

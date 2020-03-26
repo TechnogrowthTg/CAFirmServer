@@ -102,52 +102,22 @@ const getContactById = (req, res) => {
  * @param {*} res 
  * @author Amol Dhamale
  */
+
 const updateContact = (req, res) => {
     var data = req.body;
-    isContactExits(data.ContactPersonName, function (err, result) {
+    var query = "UPDATE `client_contact` SET `ClientId`= '" + data.ClientId + "', `ContactPersonName`= '" + data.ContactPersonName + "',`Email`= '" + data.Email + "',`Designation`= '" + data.Designation + "',`MobileNumber1`= '" + data.MobileNumber1 + "',`MobileNumber2`= '" + data.MobileNumber2 + "',`Telephone`= '" + data.Telephone + "',`Address`= '" + data.Address + "',`Reference`= '" + data.Reference + "',`CurrentStatus`= '" + data.CurrentStatus + "',`IsBroadService`= '" + data.IsBroadService + "',`UpdatedDate` = CURRENT_TIMESTAMP() WHERE ContactId=" + data.ContactId;
+    DbConnect.query(query, function (err, result) {
         if (err)
             res.status(401).json({
                 success: false,
                 error: err,
-                message: 'Invalid fields'
+                message: 'Something went wrong. Please try again'
             });
-        var contactcount = result;
-        if (contactcount) {
-            res.status(401).json({
-                success: false,
-                error: err,
-                message: 'Contact Already Exits'
-            });
-        } else {
-            var query = "UPDATE `client_contact` SET `ClientId`= '" + data.ClientId + "', `ContactPersonName`= '" + data.ContactPersonName + "',`Email`= '" + data.Email + "',`Designation`= '" + data.Designation + "',`MobileNumber1`= '" + data.MobileNumber1 + "',`MobileNumber2`= '" + data.MobileNumber2 + "',`Telephone`= '" + data.Telephone + "',`Address`= '" + data.Address + "',`Reference`= '" + data.Reference + "',`CurrentStatus`= '" + data.CurrentStatus + "',`IsBroadService`= '" + data.IsBroadService + "',`UpdatedDate` = CURRENT_TIMESTAMP() WHERE ContactId=" + data.ContactId;
-            // var query = "UPDATE client_contact as cc JOIN client as c on cc.ClientId=c.ClientId SET `ClientId`= '" + data.ClientId + "', `ContactPersonName`= '" + data.ContactPersonName + "',`Email`= '" + data.Email + "',`Designation`= '" + data.Designation + "',`MobileNumber1`= '" + data.MobileNumber1 + "',`MobileNumber2`= '" + data.MobileNumber2 + "',`Telephone`= '" + data.Telephone + "',`Address`= '" + data.Address + "',`Reference`= '" + data.Reference + "',`CurrentStatus`= '" + data.CurrentStatus + "',`IsBroadService`= '" + data.IsBroadService + "',`UpdatedDate` = CURRENT_TIMESTAMP() WHERE ContactId= " + data.ContactId;
-            DbConnect.query(query, function (err, result) {
-                if (err)
-                    res.status(401).json({
-                        success: false,
-                        error: err,
-                        message: 'Something went wrong. Please try again'
-                    });
-                else
-                    res.status(200).json({
-                        success: true,
-                        message: 'Record Updated successfully'
-                    });
-            });
-        }
-    })
-}
-
-// To check whether the Client Contact is exits or not.
-isContactExits = (ContactPersonName, callback) => {
-    var qry = "SELECT count(ContactPersonName) as cnt FROM `client_contact` WHERE ContactPersonName like '" + ContactPersonName + "' ";
-    DbConnect.query(qry, function (err, result) {
-        if (err)
-            callback(err, null);
-        if (result[0].cnt > 0)
-            callback(null, true);
         else
-            callback(null, false);
+            res.status(200).json({
+                success: true,
+                message: 'Record Updated successfully'
+            });
     });
 }
 

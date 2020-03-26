@@ -126,51 +126,22 @@ const getClientById = (req, res) => {
  * @param {*} res 
  * @author Amol Dhamale
  */
+
 const updateClient = (req, res) => {
     var data = req.body;
-    isClientExits(data.ClientName, function (err, result) {
+    var query = "UPDATE `client` SET `GroupId`='" + data.GroupId + "', `ClientName`='" + data.ClientName + "',`ClientEmail`='" + data.ClientEmail + "',`GstNumber` ='" + data.GstNumber + "',`PanNumber`='" + data.PanNumber + "',`AdharNumber`='" + data.AdharNumber + "',`ClientAddress`='" + data.ClientAddress + "',`TypeOfEntity`='" + data.TypeOfEntity + "',`CurrentStatus`='" + data.CurrentStatus + "',`AgreementStatus`='" + data.AgreementStatus + "',`IncorporationDate`='" + data.IncorporationDate + "', `UpdatedDate` = CURRENT_TIMESTAMP() WHERE ClientId=" + data.ClientId;
+    DbConnect.query(query, function (err, result) {
         if (err)
             res.status(401).json({
                 success: false,
                 error: err,
-                message: 'Invalid fields'
+                message: 'Something went wrong. Please try again'
             });
-        var clientcount = result;
-        if (clientcount) {
-            res.status(401).json({
-                success: false,
-                error: err,
-                message: 'Client Already Exits'
-            });
-        } else {
-            var query = "UPDATE `client` SET `GroupId`='" + data.GroupId + "', `ClientName`='" + data.ClientName + "',`ClientEmail`='" + data.ClientEmail + "',`GstNumber` ='" + data.GstNumber + "',`PanNumber`='" + data.PanNumber + "',`AdharNumber`='" + data.AdharNumber + "',`ClientAddress`='" + data.ClientAddress + "',`TypeOfEntity`='" + data.TypeOfEntity + "',`CurrentStatus`='" + data.CurrentStatus + "',`AgreementStatus`='" + data.AgreementStatus + "',`IncorporationDate`='" + data.IncorporationDate + "', `UpdatedDate` = CURRENT_TIMESTAMP() WHERE ClientId=" + data.ClientId;
-            DbConnect.query(query, function (err, result) {
-                if (err)
-                    res.status(401).json({
-                        success: false,
-                        error: err,
-                        message: 'Something went wrong. Please try again'
-                    });
-                else
-                    res.status(200).json({
-                        success: true,
-                        message: 'Record Updated successfully'
-                    });
-            });
-        }
-    })
-}
-
-// To check whether the client is exits or not.
-isClientExits = (ClientName, callback) => {
-    var qry = "SELECT count(ClientName) as cnt FROM `client` WHERE ClientName like '" + ClientName + "' ";
-    DbConnect.query(qry, function (err, result) {
-        if (err)
-            callback(err, null);
-        if (result[0].cnt > 0)
-            callback(null, true);
         else
-            callback(null, false);
+            res.status(200).json({
+                success: true,
+                message: 'Record Updated successfully'
+            });
     });
 }
 

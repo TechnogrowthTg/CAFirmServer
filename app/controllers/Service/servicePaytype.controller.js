@@ -101,51 +101,23 @@ const getPaytypeById = (req, res) => {
  * @param {*} res 
  * @author Amol Dhamale
  */
+
+
 const updatePaytype = (req, res) => {
     var data = req.body;
-    isPaytypeExits(data.ModeOfPayment, function (err, result) {
+    var query = "UPDATE service_pay_type SET `ModeOfPayment`= '" + data.ModeOfPayment + "', `UpdatedDate` = CURRENT_TIMESTAMP() WHERE 	PayTypeId=" + data.PayTypeId;
+    DbConnect.query(query, function (err, result) {
         if (err)
             res.status(401).json({
                 success: false,
                 error: err,
-                message: 'Invalid fields'
+                message: 'Something went wrong. Please try again'
             });
-        var groupcount = result;
-        if (groupcount) {
-            res.status(401).json({
-                success: false,
-                error: err,
-                message: 'Paytype Already Exits'
-            });
-        } else {
-            var query = "UPDATE service_pay_type SET `ModeOfPayment`= '" + data.ModeOfPayment + "', `UpdatedDate` = CURRENT_TIMESTAMP() WHERE 	PayTypeId=" + data.PayTypeId;
-            DbConnect.query(query, function (err, result) {
-                if (err)
-                    res.status(401).json({
-                        success: false,
-                        error: err,
-                        message: 'Something went wrong. Please try again'
-                    });
-                else
-                    res.status(200).json({
-                        success: true,
-                        message: 'Record Updated successfully'
-                    });
-            });
-        }
-    })
-}
-
-// To check whether the Service Group is exits or not.
-isPaytypeExits = (ModeOfPayment, callback) => {
-    var qry = "SELECT count(ModeOfPayment) as cnt FROM `service_pay_type` WHERE ModeOfPayment like '" + ModeOfPayment + "' ";
-    DbConnect.query(qry, function (err, result) {
-        if (err)
-            callback(err, null);
-        if (result[0].cnt > 0)
-            callback(null, true);
         else
-            callback(null, false);
+            res.status(200).json({
+                success: true,
+                message: 'Record Updated successfully'
+            });
     });
 }
 

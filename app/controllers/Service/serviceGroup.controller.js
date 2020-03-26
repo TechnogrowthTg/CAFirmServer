@@ -101,51 +101,22 @@ const getServiceGroupById = (req, res) => {
  * @param {*} res 
  * @author Amol Dhamale
  */
+
 const updateServiceGroup = (req, res) => {
     var data = req.body;
-    isServiceGroupExits(data.ServiceGroupName, function (err, result) {
+    var query = "UPDATE service_group SET `ServiceGroupName`= '" + data.ServiceGroupName + "', `UpdatedDate` = CURRENT_TIMESTAMP() WHERE ServiceGroupId=" + data.ServiceGroupId;
+    DbConnect.query(query, function (err, result) {
         if (err)
             res.status(401).json({
                 success: false,
                 error: err,
-                message: 'Invalid fields'
+                message: 'Something went wrong. Please try again'
             });
-        var groupcount = result;
-        if (groupcount) {
-            res.status(401).json({
-                success: false,
-                error: err,
-                message: 'Service Group Already Exits'
-            });
-        } else {
-            var query = "UPDATE service_group SET `ServiceGroupName`= '" + data.ServiceGroupName + "', `UpdatedDate` = CURRENT_TIMESTAMP() WHERE ServiceGroupId=" + data.ServiceGroupId;
-            DbConnect.query(query, function (err, result) {
-                if (err)
-                    res.status(401).json({
-                        success: false,
-                        error: err,
-                        message: 'Something went wrong. Please try again'
-                    });
-                else
-                    res.status(200).json({
-                        success: true,
-                        message: 'Record Updated successfully'
-                    });
-            });
-        }
-    })
-}
-
-// To check whether the Service Group is exits or not.
-isServiceGroupExits = (ServiceGroupName, callback) => {
-    var qry = "SELECT count(ServiceGroupName) as cnt FROM `service_group` WHERE ServiceGroupName like '" + ServiceGroupName + "' ";
-    DbConnect.query(qry, function (err, result) {
-        if (err)
-            callback(err, null);
-        if (result[0].cnt > 0)
-            callback(null, true);
         else
-            callback(null, false);
+            res.status(200).json({
+                success: true,
+                message: 'Record Updated successfully'
+            });
     });
 }
 
