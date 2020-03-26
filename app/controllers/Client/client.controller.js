@@ -102,7 +102,7 @@ const getAllClient = (req, res) => {
  */
 const getClientById = (req, res) => {
     var ClientId = req.params.ClientId;
-    var query = "SELECT c.ClientId, cg.GroupName, c.ClientName, c.ClientEmail, c.GstNumber, c.PanNumber, c.AdharNumber, c.ClientAddress, c.TypeOfEntity, c.CurrentStatus, c.AgreementStatus, c.IncorporationDate FROM client as c JOIN client_group as cg on c.GroupId=cg.GroupId WHERE c.IsDeleted=1 and c.ClientId=" + ClientId;
+    var query = "SELECT c.ClientId, cg.GroupId, cg.GroupName, c.ClientName, c.ClientEmail, c.GstNumber, c.PanNumber, c.AdharNumber, c.ClientAddress, c.TypeOfEntity, c.CurrentStatus, c.AgreementStatus, c.IncorporationDate FROM client as c JOIN client_group as cg on c.GroupId=cg.GroupId WHERE c.IsDeleted=1 and c.ClientId=" + ClientId;
     DbConnect.query(query, function (err, result) {
         if (err) {
             res.status(401).json({
