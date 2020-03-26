@@ -23,7 +23,7 @@ var ContactRoute = require('./app/routes/Contact/contact.route');
 var ServiceGroupRoute = require('./app/routes/Service/serviceGroup.route');
 var SubServiceGroupRoute = require('./app/routes/Service/service.Subgroup.route');
 var PaytypeRoute = require('./app/routes/Service/servicePaytype.route');
-// var ServiceRoute = require('./app/routes/Service/ServiceRoute');
+var ServicePayRoute = require('./app/routes/Service/servicePay.route');
 // var ServiceRoute = require('./app/routes/Service/ServiceRoute');
 
 // app.use('/auth', AuthRoute)
@@ -33,5 +33,6 @@ app.use('/contact', ContactRoute)
 app.use('/serviceGroup', ServiceGroupRoute);
 app.use('/subserviceGroup', SubServiceGroupRoute);
 app.use('/paytype', PaytypeRoute);
+app.use('/pay', ServicePayRoute);
 
 app.listen(port, () => console.log(`server listening on port ${port}!`));
