@@ -24,7 +24,7 @@ var ServiceGroupRoute = require('./app/routes/Service/serviceGroup.route');
 var SubServiceGroupRoute = require('./app/routes/Service/service.Subgroup.route');
 var PaytypeRoute = require('./app/routes/Service/servicePaytype.route');
 var ServicePayRoute = require('./app/routes/Service/servicePay.route');
-// var ServiceRoute = require('./app/routes/Service/ServiceRoute');
+var ServiceRoute = require('./app/routes/Service/service.route');
 
 // app.use('/auth', AuthRoute)
 app.use('/group', ClientGroupRoute);
@@ -34,5 +34,6 @@ app.use('/serviceGroup', ServiceGroupRoute);
 app.use('/subserviceGroup', SubServiceGroupRoute);
 app.use('/paytype', PaytypeRoute);
 app.use('/pay', ServicePayRoute);
+app.use('/service', ServiceRoute);
 
 app.listen(port, () => console.log(`server listening on port ${port}!`));
