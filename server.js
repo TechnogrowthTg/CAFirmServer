@@ -20,9 +20,9 @@ app.use('/', express.static(path.join(__dirname, 'public')))
 var ClientGroupRoute = require('./app/routes/ClientGroup/client.group.route');
 var ClientRoute = require('./app/routes/Client/client.route');
 var ContactRoute = require('./app/routes/Contact/contact.route');
-var ServiceGroupRoute = require('./app/routes/Service/service.group.route');
-var SubServiceGroupRoute = require('./app/routes/Service/service.sub.group.route');
-// var ServiceRoute = require('./app/routes/Service/ServiceRoute');
+var ServiceGroupRoute = require('./app/routes/Service/serviceGroup.route');
+var SubServiceGroupRoute = require('./app/routes/Service/service.Subgroup.route');
+var PaytypeRoute = require('./app/routes/Service/servicePaytype.route');
 // var ServiceRoute = require('./app/routes/Service/ServiceRoute');
 // var ServiceRoute = require('./app/routes/Service/ServiceRoute');
 
@@ -32,5 +32,6 @@ app.use('/client', ClientRoute);
 app.use('/contact', ContactRoute)
 app.use('/serviceGroup', ServiceGroupRoute);
 app.use('/subserviceGroup', SubServiceGroupRoute);
+app.use('/paytype', PaytypeRoute);
 
 app.listen(port, () => console.log(`server listening on port ${port}!`));
