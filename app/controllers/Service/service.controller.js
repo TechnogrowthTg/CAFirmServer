@@ -101,12 +101,30 @@ const getServicePayAmount = (req, res) => {
 }
 
 /**
- * This function represent to add new service to service Master
+ * This function represent to Insert new service to service Master
  * @param {*} req 
  * @param {*} res 
  * @author Amol Dhamale
  */
-
+const insertService = (req, res) => {
+    var data = req.body;
+    var query = "INSERT INTO `service`( `ServiceGroupId`, `ServiceSubGroupId`, `PayTypeId`, `ServicePayId`, `CreatedDate`, `IsDeleted`) VALUES ('" + data.ServiceGroupId + "','" + data.ServiceSubGroupId + "','" + data.PayTypeId + "','" + data.ServicePayId + "',now(),1)";
+     DbConnect.query(query, function (err, result) {
+         if (err)
+             res.status(401).json({
+                 success: false,
+                 error: err,
+                 message: 'Something went wrong. Please try again'
+             });
+         else
+             res.status(200).json({
+                 success: true,
+                 data: result,
+                 message: 'Record gets successfully'
+             });
+     });
+ }
+ 
  /**
  * This function represent to get all services from service Master
  * @param {*} req 
@@ -114,32 +132,115 @@ const getServicePayAmount = (req, res) => {
  * @author Amol Dhamale
  */
 
-// const getAllServices = (req, res) => {
-//     // var query = "SELECT service.ServiceId, service_group.ServiceGroupId, service_type.ServiceTypeId ,sub_service.SubServiceId, service_pay_type.PayTypeId, service_pay.ServicePayId, (SELECT service_group.ServiceGroupName FROM service_group WHERE service_group.ServiceGroupId=service.ServiceGroupId) as ServiceGroupName,(SELECT service_type.ServiceTypeName FROM service_type WHERE service_type.ServiceTypeId=service.ServiceTypeId) as ServiceName, (SELECT sub_service.SubServiceName FROM sub_service WHERE sub_service.SubServiceId=service.SubServiceId) as SubServiceName, (SELECT service_pay_type.PayTypeName FROM service_pay_type WHERE service_pay_type.PayTypeId=service.PayTypeId) as ServicePayment, (SELECT service_pay.Amount FROM service_pay WHERE service_pay.ServicePayId=service.ServicePayId) as ServiceAmount, Frequency FROM service JOIN service_group on service.ServiceGroupId=service_group.ServiceGroupId JOIN service_type on service.ServiceTypeId=service_type.ServiceTypeId JOIN sub_service ON service.SubServiceId=sub_service.SubServiceId JOIN service_pay_type on service.PayTypeId=service_pay_type.PayTypeId JOIN service_pay on service.ServicePayId=service_pay.ServicePayId WHERE service.IsDeleted=1";
-//     DbConnect.query(query, function (err, result) {
-//         if (err)
-//             res.status(401).json({
-//                 success: false,
-//                 error: err,
-//                 message: 'Something went wrong. Please try again'
-//             });
-//         else
-//             res.status(200).json({
-//                 success: true,
-//                 data: result,
-//                 message: 'Record gets successfully'
-//             });
-//     });
-// }
+const getAllServices = (req, res) => {
+   var query ="SELECT service.ServiceId, service_group.ServiceGroupId,service_sub_group.ServiceSubGroupId,service_pay_type.PayTypeId, service_pay.ServicePayId, service_group.ServiceGroupName, service_sub_group.ServiceSubGroupName,service_pay_type.ModeOfPayment,service_pay.DefaultAmount,service_pay.PeriodOfService FROM service JOIN service_group on service.ServiceGroupId=service_group.ServiceGroupId JOIN service_sub_group ON service.ServiceSubGroupId=service_sub_group.ServiceSubGroupId JOIN service_pay_type on service.PayTypeId=service_pay_type.PayTypeId JOIN service_pay on service.ServicePayId=service_pay.ServicePayId WHERE service.IsDeleted=1 ORDER BY service.ServiceId DESC"
+    DbConnect.query(query, function (err, result) {
+        if (err)
+            res.status(401).json({
+                success: false,
+                error: err,
+                message: 'Something went wrong. Please try again'
+            });
+        else
+            res.status(200).json({
+                success: true,
+                data: result,
+                message: 'Record gets successfully'
+            });
+    });
+}
+
+/**
+ * This function represent to get a service by his/her ServiceId from service Master
+ * @param {*} req 
+ * @param {*} res 
+ * @author Amol Dhamale
+ */
+const getServiceById = (req, res) => {
+    var ServiceId = req.params.ServiceId;
+    var query = "SELECT service.ServiceId, service_group.ServiceGroupId,service_sub_group.ServiceSubGroupId,service_pay_type.PayTypeId, service_pay.ServicePayId, service_group.ServiceGroupName, service_sub_group.ServiceSubGroupName,service_pay_type.ModeOfPayment,service_pay.DefaultAmount,service_pay.PeriodOfService FROM service JOIN service_group on service.ServiceGroupId=service_group.ServiceGroupId JOIN service_sub_group ON service.ServiceSubGroupId=service_sub_group.ServiceSubGroupId JOIN service_pay_type on service.PayTypeId=service_pay_type.PayTypeId JOIN service_pay on service.ServicePayId=service_pay.ServicePayId WHERE service.IsDeleted=1 and service.ServiceId=" + ServiceId;
+    DbConnect.query(query, function (err, result) {
+        if (err) {
+            res.status(401).json({
+                success: false,
+                error: err,
+                message: 'Something went wrong. Please try again'
+            });
+        } else {
+            res.status(200).json({
+                success: true,
+                data: result[0],
+                message: 'Record gets successfully'
+            });
+        }
+    });
+}
+
+
+/**
+ * This function represent to update a service by his/her ServiceId to service Master
+ * @param {*} req 
+ * @param {*} res 
+ * @author Amol Dhamale
+ */
+const updateService = (req, res) => {
+    var data = req.body;
+    var query = "UPDATE `service` SET `ServiceGroupId`='" + data.ServiceGroupId + "', `ServiceSubGroupId`='" + data.ServiceSubGroupId + "',`PayTypeId`='" + data.PayTypeId + "',`ServicePayId` ='" + data.ServicePayId + "', `UpdatedDate` = CURRENT_TIMESTAMP() WHERE `ServiceId`=" + data.ServiceId;
+    DbConnect.query(query, function (err, result) {
+        if (err) {
+            res.status(401).json({
+                success: false,
+                error: err,
+                message: 'Something went wrong. Please try again'
+            });
+        } else {
+            res.status(200).json({
+                success: true,
+                data: result,
+                message: 'Record deleted successfully'
+            });
+        }
+    });
+}
+
+
+
+/**
+ * This function represent to delete a service by his/her ServiceId from service Master
+ * @param {*} req 
+ * @param {*} res 
+ * @author Amol Dhamale
+ */
+
+const deleteService = (req, res) => {
+    var data = req.body;
+    var query = "UPDATE `service` SET `IsDeleted`='0' WHERE `ServiceId`=" + data.ServiceId;
+    DbConnect.query(query, function (err, result) {
+        if (err) {
+            res.status(401).json({
+                success: false,
+                error: err,
+                message: 'Something went wrong. Please try again'
+            });
+        } else {
+            res.status(200).json({
+                success: true,
+                data: result,
+                message: 'Record deleted successfully'
+            });
+        }
+    });
+}
 
 module.exports = {
     getServiceGroup,
     getServiceSubGroup,
     getServicePayment,
     getServicePayAmount,
-    //insertService
-    // getAllServices,
-    // getServiceById,
-    // updateService,
-    // deleteService
+
+    insertService,
+    getAllServices,
+    getServiceById,
+    updateService,
+    deleteService
 }
