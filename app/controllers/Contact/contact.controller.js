@@ -19,7 +19,7 @@ const insertContact = (req, res) => {
         } else {
 
             if (result[0].cnt == 0) {
-                var query = "INSERT INTO `client_contact`(`ContactPersonName`, `Email`, `Designation`, `MobileNumber1`, `MobileNumber2`, `Telephone`, `Address`, `Reference`, `CurrentStatus`, `IsBroadService`, `CreatedDate`, `IsDeleted`) VALUES ('" + data.ClientId + "' ,'" + data.ContactPersonName + "','" + data.Email + "','" + data.Designation + "','" + data.MobileNumber1 + "','" + data.MobileNumber2 + "','" + data.Telephone + "','" + data.Address + "','" + data.Reference + "','" + data.CurrentStatus + "','" + data.IsBroadService + "',now(),1)";
+                var query = "INSERT INTO `client_contact`(`ContactPersonName`, `Email`, `Designation`, `MobileNumber1`, `MobileNumber2`, `Telephone`, `Address`, `Reference`, `CurrentStatus`, `IsBroadService`, `CreatedDate`, `IsDeleted`) VALUES ('" + data.ContactPersonName + "','" + data.Email + "','" + data.Designation + "','" + data.MobileNumber1 + "','" + data.MobileNumber2 + "','" + data.Telephone + "','" + data.Address + "','" + data.Reference + "','" + data.CurrentStatus + "','" + data.IsBroadService + "',now(),1)";
                 DbConnect.query(query, function (err, result) {
                     if (err)
                         res.status(401).json({
