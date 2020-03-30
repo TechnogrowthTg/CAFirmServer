@@ -1,5 +1,5 @@
 const Router = require('express').Router(),
-ServiceController = require('../../controllers/Service/service.controller');
+ServiceController = require('../controllers/service.controller');
 
 Router.get('/servicegroup', ServiceController.getServiceGroup);
 Router.get('/servicesubgroup', ServiceController.getServiceSubGroup);

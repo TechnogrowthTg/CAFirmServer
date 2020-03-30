@@ -1,5 +1,5 @@
 const Router = require('express').Router(),
-ClientContactController = require('../../controllers/Contact/contact.controller');
+ClientContactController = require('../controllers/contact.controller');
 
 Router.post('/insertContact', ClientContactController.insertContact);
 Router.get('/contacts', ClientContactController.getAllContact);

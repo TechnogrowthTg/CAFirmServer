@@ -1,5 +1,5 @@
 const Router = require('express').Router(),
-PaytypeController = require('../../controllers/Service/servicePaytype.controller');
+PaytypeController = require('../controllers/servicePaytype.controller');
 
 Router.post('/insertPaytype', PaytypeController.insertPaytype);
 Router.get('/allPaytypes',PaytypeController.getAllPaytype);

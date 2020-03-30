@@ -16,22 +16,26 @@ app.use(bodyParser.json({
 
 app.use('/', express.static(path.join(__dirname, 'public')))
 
-// var AuthRoute = require('./app/routes/Authentication/AuthenticationRoute');
-var ClientGroupRoute = require('./app/routes/ClientGroup/client.group.route');
-var ClientRoute = require('./app/routes/Client/client.route');
-var ContactRoute = require('./app/routes/Contact/contact.route');
-var ServiceGroupRoute = require('./app/routes/Service/serviceGroup.route');
-var SubServiceGroupRoute = require('./app/routes/Service/service.Subgroup.route');
-var PaytypeRoute = require('./app/routes/Service/servicePaytype.route');
-var ServicePayRoute = require('./app/routes/Service/servicePay.route');
-var ServiceRoute = require('./app/routes/Service/service.route');
 
-// app.use('/auth', AuthRoute)
+var Validator = require('./validator');
+var AuthRoute = require('./app/routes/auth.route');
+var ClientGroupRoute = require('./app/routes/clientGroup.route');
+var ClientRoute = require('./app/routes/client.route');
+var ContactRoute = require('./app/routes/contact.route');
+var ServiceGroupRoute = require('./app/routes/serviceGroup.route');
+var ServiceSubGroupRoute = require('./app/routes/serviceSubgroup.route');
+var PaytypeRoute = require('./app/routes/servicePaytype.route');
+var ServicePayRoute = require('./app/routes/servicePay.route');
+var ServiceRoute = require('./app/routes/service.route');
+
+
+app.use('/auth/validate', Validator);
+app.use('/auth', AuthRoute);
 app.use('/group', ClientGroupRoute);
 app.use('/client', ClientRoute);
 app.use('/contact', ContactRoute)
 app.use('/serviceGroup', ServiceGroupRoute);
-app.use('/subserviceGroup', SubServiceGroupRoute);
+app.use('/subserviceGroup', ServiceSubGroupRoute);
 app.use('/paytype', PaytypeRoute);
 app.use('/pay', ServicePayRoute);
 app.use('/service', ServiceRoute);

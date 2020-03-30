@@ -1,5 +1,5 @@
 const Router = require('express').Router(),
-ClientController = require('../../controllers/Client/client.controller');
+ClientController = require('../controllers/client.controller');
 
 Router.get('/groupName',ClientController.getClientGroupName);
 Router.post('/insertClient',ClientController.insertClient);

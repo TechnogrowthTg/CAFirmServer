@@ -1,4 +1,4 @@
-const DbConnect = require('../../../config/mysqlconnect');
+const DbConnect = require('../../config/mysqlconnect');
 /**
  * This function represent to get ClientGroupName from service_group Master
  * @param {*} req 

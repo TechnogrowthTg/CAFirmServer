@@ -1,5 +1,5 @@
 const Router = require('express').Router(),
-ClientGroupController = require('../../controllers/ClientGroup/group.controller');
+ClientGroupController = require('../controllers/group.controller');
 
 Router.post('/insertGroup', ClientGroupController.insertGroup);
 Router.get('/groups',ClientGroupController.getAllGroup);

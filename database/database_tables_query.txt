@@ -1,0 +1,49 @@
+CREATE TABLE `role` (
+  `RoleId` bigint(15) NOT NULL AUTO_INCREMENT,
+  `RoleName` varchar(30) NOT NULL,
+  PRIMARY KEY (`RoleId`)
+);
+
+
+CREATE TABLE `user_role` (
+  `RoleId` 	bigint(15) NOT NULL,
+  `UserId` 	bigint(15) NOT NULL,
+  KEY `RoleId` (`RoleId`),
+  KEY `UserId` (`UserId`),
+  CONSTRAINT `user_role_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`),
+  CONSTRAINT `user_role_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user_master` (`user_id`),
+  CONSTRAINT `user_role_ibfk_3` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`),
+  CONSTRAINT `user_role_ibfk_4` FOREIGN KEY (`user_id`) REFERENCES `user_master` (`user_id`),
+  CONSTRAINT `user_role_ibfk_5` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`),
+  CONSTRAINT `user_role_ibfk_6` FOREIGN KEY (`user_id`) REFERENCES `user_master` (`user_id`)
+);
+ALTER TABLE `user_log` ADD FOREIGN KEY (`UserId`) REFERENCES `user`(`UserId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+client_log:
+ALTER TABLE `client_log` ADD FOREIGN KEY (`GroupId`) REFERENCES `client_group`(`GroupId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+CREATE PROCEDURE `insertClientLog`(IN `ClientId` BIGINT(15), IN `GroupId` BIGINT(15), IN `ClientName` VARCHAR(40), IN `ClientEmail` VARCHAR(50), IN `ClientCode` VARCHAR(30), IN `GstNumber` VARCHAR(20), IN `PanNumber` VARCHAR(20), IN `AdharNumber` VARCHAR(20), IN `ClientAddress` VARCHAR(200), IN `TypeOfEntity` VARCHAR(20), IN `CurrentStatus` VARCHAR(20), IN `AgreementStatus` VARCHAR(20), IN `IncorporationDate` DATETIME) NOT DETERMINISTIC NO SQL SQL SECURITY DEFINER INSERT INTO `client_log`(`ClientId`, `GroupId`, `ClientName`, `ClientEmail`, `ClientCode`, `GstNumber`, `PanNumber`, `AdharNumber`, `ClientAddress`, `TypeOfEntity`, `CurrentStatus`, `AgreementStatus`, `IncorporationDate`, `CreatedDate`, `IsDeleted`) VALUES (ClientId, GroupId, ClientName, ClientEmail, ClientCode, GstNumber , PanNumber, AdharNumber, ClientAddress, TypeOfEntity, CurrentStatus, AgreementStatus, now(), now(), 1);
+
+ClientContact:
+ALTER TABLE `client_contact` ADD `ClientId` BIGINT(15) NULL DEFAULT NULL AFTER `ContactId`;
+
+
+Client Contact Log:
+
+ALTER TABLE `client_contact_log` ADD FOREIGN KEY (`ClientId`) REFERENCES `client`(`ClientId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `client_contact_log` ADD FOREIGN KEY (`ContactId`) REFERENCES `client_contact`(`ContactId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `client_contact_log` CHANGE `ClientId` `ClientId` BIGINT(15) NULL DEFAULT NULL;
+
+Service Group Log:
+ALTER TABLE `service_group_log` ADD FOREIGN KEY (`ServiceGroupId`) REFERENCES `service_group`(`ServiceGroupId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+Service Sub Group Log :
+ALTER TABLE `service_sub_group_log` ADD FOREIGN KEY (`ServiceSubGroupId`) REFERENCES `service_sub_group`(`ServiceSubGroupId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+
+Service Pay Type Log;
+ALTER TABLE `service_pay_type_log` ADD FOREIGN KEY (`PayTypeId`) REFERENCES `service_pay_type`(`PayTypeId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+Service Pay Log:
+ALTER TABLE `service_pay_log` ADD `CreatedBy` BIGINT(15) NOT NULL AFTER `PeriodOfService`, ADD `CreatedDate` DATETIME NOT NULL AFTER `CreatedBy`, ADD `UpdatedBy` BIGINT(15) NOT NULL AFTER `CreatedDate`, ADD `UpdatedDate` DATETIME NOT NULL AFTER `UpdatedBy`, ADD `IsDeleted` BOOLEAN NOT NULL AFTER `UpdatedDate`;
+ALTER TABLE `service_pay_log` ADD FOREIGN KEY (`ServicePayId`) REFERENCES `service_pay`(`ServicePayId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
