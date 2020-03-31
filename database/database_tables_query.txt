@@ -17,7 +17,16 @@ CREATE TABLE `user_role` (
   CONSTRAINT `user_role_ibfk_5` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`),
   CONSTRAINT `user_role_ibfk_6` FOREIGN KEY (`user_id`) REFERENCES `user_master` (`user_id`)
 );
+
+
+User:
+ALTER TABLE `user` ADD `RoleId` BIGINT(15) NOT NULL AFTER `UserId`;
+
+
+User Log:
 ALTER TABLE `user_log` ADD FOREIGN KEY (`UserId`) REFERENCES `user`(`UserId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `user_log` ADD `RoleId` BIGINT(15) NOT NULL AFTER `UserId`;
+
 
 client_log:
 ALTER TABLE `client_log` ADD FOREIGN KEY (`GroupId`) REFERENCES `client_group`(`GroupId`) ON DELETE NO ACTION ON UPDATE NO ACTION;

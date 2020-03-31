@@ -54,6 +54,7 @@ const userLogin = (req, res) => {
     }
 }
 
+
 const insertUser = (req, res) => {
     var data = req.body;
     var isUserExists = "CALL `getUserCount`(?,?)";
@@ -66,10 +67,10 @@ const insertUser = (req, res) => {
                     message: 'Something went wrong. Please try again'
                 });
             } else {
-
                 if (result[0][0].cnt == 0) {
-                    var query = "CALL `insertUser`(?,?,?,?,?)";
+                    var query = "CALL `insertUser`(?,?,?,?,?,?)";
                     DbConnect.query(query, [
+                        data.RoleId,
                         data.FirstName,
                         data.LastName,
                         data.UserEmail,
@@ -83,11 +84,92 @@ const insertUser = (req, res) => {
                                 message: 'Something went wrong. Please try again'
                             });
                         } else {
-                            res.status(200).json({
-                                success: true,
-                                data: result[0],
-                                message: 'Record Inserted successfully'
-                            });
+                            var selectQuery = "SELECT MAX(UserId) as UserId from user";
+                            try {
+                                DbConnect.query(selectQuery, function (err, result) {
+                                    if (err) {
+                                        res.status(401).json({
+                                            success: false,
+                                            error: err,
+                                            message: 'Something went wrong. Please try again'
+                                        });
+                                    } else {
+                                        var query = "CALL `insertUserLog`(?,?,?,?,?,?,?)";
+                                        try {
+                                            DbConnect.query(query, [
+                                                result[0].UserId,
+                                                data.RoleId,
+                                                data.FirstName,
+                                                data.LastName,
+                                                data.UserEmail,
+                                                data.Gender,
+                                                data.Password
+                                            ], function (err, result) {
+                                                if (err) {
+                                                    res.status(401).json({
+                                                        success: false,
+                                                        error: err,
+                                                        message: 'Something went wrong. Please try again'
+                                                    });
+                                                }
+                                                else {
+                                                    var selectQuery = "SELECT MAX(UserId) as UserId from user_log";
+                                                    try {
+                                                        DbConnect.query(selectQuery, function (err, result) {
+                                                            if (err) {
+                                                                res.status(401).json({
+                                                                    success: false,
+                                                                    error: err,
+                                                                    message: 'Something went wrong. Please try again'
+                                                                });
+                                                            } else {
+                                                                var query = "CALL `insertUserRole`(?,?)";
+                                                                DbConnect.query(query, [result[0].UserId, data.RoleId], function (err, result) {
+                                                                    if (err) {
+                                                                        res.status(401).json({
+                                                                            success: false,
+                                                                            error: err,
+                                                                            message: 'Something went wrong. Please try again'
+                                                                        });
+                                                                    } else {
+                                                                        res.status(200).json({
+                                                                            success: true,
+                                                                            data: result,
+                                                                            message: 'Record gets successfully'
+                                                                        });
+                                                                    }
+                                                                });
+                                                            }
+                                                        })
+                                                    } catch (ex) {
+                                                        res.status(401).json({
+                                                            success: false,
+                                                            error: err,
+                                                            message: ex.message
+                                                        });
+                                                    }
+
+                                                }
+
+                                            });
+                                        } catch (ex) {
+                                            res.status(401).json({
+                                                success: false,
+                                                error: err,
+                                                message: ex.message
+                                            });
+                                        }
+
+                                    }
+
+                                });
+                            } catch (ex) {
+                                res.status(401).json({
+                                    success: false,
+                                    error: err,
+                                    message: ex.message
+                                });
+                            }
                         }
                     });
                 } else {
@@ -108,6 +190,7 @@ const insertUser = (req, res) => {
         });
     }
 }
+
 
 const getAllUsers = (req, res) => {
     var query = "CALL `getAllUsers`()";
@@ -164,10 +247,11 @@ const getUserById = (req, res) => {
 
 const updateUser = (req, res) => {
     var data = req.body;
-    var query = "CALL `updateUser`(?,?,?,?,?,?)";
+    var query = "CALL `updateUser`(?,?,?,?,?,?,?)";
     try {
         DbConnect.query(query, [
             data.UserId,
+            data.RoleId,
             data.FirstName,
             data.LastName,
             data.UserEmail,
