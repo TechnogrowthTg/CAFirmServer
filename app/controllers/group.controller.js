@@ -112,7 +112,7 @@ const getAllGroup = (req, res) => {
             else
                 res.status(200).json({
                     success: true,
-                    data: result,
+                    data: result[0],
                     message: 'Record gets successfully'
                 });
         });
@@ -138,7 +138,7 @@ const getGroupById = (req, res) => {
             } else {
                 res.status(200).json({
                     success: true,
-                    data: result[0][0],
+                    data: result[0],
                     message: 'Record gets successfully'
                 });
             }

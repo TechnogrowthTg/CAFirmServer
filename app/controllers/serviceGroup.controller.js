@@ -104,7 +104,7 @@ const getAllServiceGroup = (req, res) => {
             else
                 res.status(200).json({
                     success: true,
-                    data: result,
+                    data: result[0],
                     message: 'Record gets successfully'
                 });
         });
@@ -130,7 +130,7 @@ const getServiceGroupById = (req, res) => {
             } else {
                 res.status(200).json({
                     success: true,
-                    data: result[0][0],
+                    data: result[0],
                     message: 'Record gets successfully'
                 });
             }
