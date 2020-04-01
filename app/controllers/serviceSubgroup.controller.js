@@ -14,8 +14,8 @@ const addSubServiceGroup = (req, res) => {
                 });
             } else {
                 if (result[0][0].cnt == 0) {
-                    var query = "CALL `addSubServiceGroup`(?)";
-                    DbConnect.query(query, [data.ServiceSubGroupName], function (err, result) {
+                    var query = "CALL `addSubServiceGroup`(?,?)";
+                    DbConnect.query(query, [data.ServiceGroupId, data.ServiceSubGroupName], function (err, result) {
                         if (err) {
                             res.status(401).json({
                                 success: false,
@@ -33,9 +33,9 @@ const addSubServiceGroup = (req, res) => {
                                             message: 'Something went wrong. Please try again'
                                         });
                                     } else {
-                                        var query = "CALL `addSubServiceGroupLog`(?,?)";
+                                        var query = "CALL `addSubServiceGroupLog`(?,?,?)";
                                         try {
-                                            DbConnect.query(query, [result[0].ServiceSubGroupId, data.ServiceSubGroupName], function (err, result) {
+                                            DbConnect.query(query, [data.ServiceGroupId, result[0].ServiceSubGroupId, data.ServiceSubGroupName], function (err, result) {
                                                 if (err) {
                                                     res.status(401).json({
                                                         success: false,
@@ -92,21 +92,28 @@ const addSubServiceGroup = (req, res) => {
 }
 
 const getAllSubServiceGroup = (req, res) => {
+    
+    // var serviceData = {};
+
     var query = "CALL `getAllSubServiceGroup`()";
     try {
         DbConnect.query(query, function (err, result) {
-            if (err)
+            if (err) {
                 res.status(401).json({
                     success: false,
                     error: err,
                     message: 'Something went wrong. Please try again'
                 });
-            else
+            }
+            else {
+
+
                 res.status(200).json({
                     success: true,
-                    data: result,
+                    data: result[0],
                     message: 'Record gets successfully'
                 });
+            }
         });
     } catch (ex) {
         res.status(401).json({
@@ -146,9 +153,9 @@ const getSubServiceGroupById = (req, res) => {
 
 const updateSubServiceGroup = (req, res) => {
     var data = req.body;
-    var query = "CALL `updateSubServiceGroup`(?,?)";
+    var query = "CALL `updateSubServiceGroup`(?,?,?)";
     try {
-        DbConnect.query(query, [data.ServiceSubGroupId, data.ServiceSubGroupName], function (err, result) {
+        DbConnect.query(query, [data.ServiceSubGroupId, data.ServiceGroupId, data.ServiceSubGroupName], function (err, result) {
             if (err)
                 res.status(401).json({
                     success: false,

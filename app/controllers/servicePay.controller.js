@@ -13,8 +13,10 @@ const insertServicePay = (req, res) => {
                 });
             } else {
                 if (result[0][0].cnt == 0) {
-                    var query = "CALL `insertServicePay`(?,?)";
+                    var query = "CALL `insertServicePay`(?,?,?,?)";
                     DbConnect.query(query, [
+                        data.ServiceGroupId,
+                        data.ServiceSubGroupId,
                         data.DefaultAmount,
                         data.PeriodOfService
                     ], function (err, result) {
@@ -35,10 +37,12 @@ const insertServicePay = (req, res) => {
                                             message: 'Something went wrong. Please try again'
                                         });
                                     } else {
-                                        var query = "CALL `insertServicePayLog`(?,?,?)";
+                                        var query = "CALL `insertServicePayLog`(?,?,?,?,?)";
                                         try {
                                             DbConnect.query(query, [
                                                 result[0].ServicePayId,
+                                                data.ServiceGroupId,
+                                                data.ServiceSubGroupId,
                                                 data.DefaultAmount,
                                                 data.PeriodOfService
                                             ], function (err, result) {
@@ -110,7 +114,7 @@ const getAllServicePay = (req, res) => {
             else
                 res.status(200).json({
                     success: true,
-                    data: result,
+                    data: result[0],
                     message: 'Record gets successfully'
                 });
         });
@@ -136,7 +140,7 @@ const getServicePayById = (req, res) => {
             } else {
                 res.status(200).json({
                     success: true,
-                    data: result[0][0],
+                    data: result[0],
                     message: 'Record gets successfully'
                 });
             }
@@ -152,10 +156,12 @@ const getServicePayById = (req, res) => {
 
 const updateServicePay = (req, res) => {
     var data = req.body;
-    var query = "CALL `updateServicePay`(?,?,?)";
+    var query = "CALL `updateServicePay`(?,?,?,?,?)";
     try {
         DbConnect.query(query, [
             data.ServicePayId,
+            data.ServiceGroupId,
+            data.ServiceSubGroupId,
             data.DefaultAmount,
             data.PeriodOfService
         ], function (err, result) {

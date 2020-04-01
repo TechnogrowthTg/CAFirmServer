@@ -47,12 +47,16 @@ ALTER TABLE `service_group_log` ADD FOREIGN KEY (`ServiceGroupId`) REFERENCES `s
 
 Service Sub Group Log :
 ALTER TABLE `service_sub_group_log` ADD FOREIGN KEY (`ServiceSubGroupId`) REFERENCES `service_sub_group`(`ServiceSubGroupId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
+ALTER TABLE `service_sub_group` ADD `ServiceGroupId` BIGINT(15) NOT NULL AFTER `ServiceSubGroupId`;
+ALTER TABLE `service_sub_group_log` ADD `ServiceGroupId` BIGINT(15) NOT NULL AFTER `SerSubGpLogId
 
 Service Pay Type Log;
 ALTER TABLE `service_pay_type_log` ADD FOREIGN KEY (`PayTypeId`) REFERENCES `service_pay_type`(`PayTypeId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `service_pay` ADD `ServiceGroupId` BIGINT(15) NOT NULL AFTER `ServicePayId`;
+ALTER TABLE `service_pay` ADD `ServiceSubGroupId` BIGINT(15) NOT NULL AFTER `ServiceGroupId`;
+
 
 Service Pay Log:
 ALTER TABLE `service_pay_log` ADD `CreatedBy` BIGINT(15) NOT NULL AFTER `PeriodOfService`, ADD `CreatedDate` DATETIME NOT NULL AFTER `CreatedBy`, ADD `UpdatedBy` BIGINT(15) NOT NULL AFTER `CreatedDate`, ADD `UpdatedDate` DATETIME NOT NULL AFTER `UpdatedBy`, ADD `IsDeleted` BOOLEAN NOT NULL AFTER `UpdatedDate`;
 ALTER TABLE `service_pay_log` ADD FOREIGN KEY (`ServicePayId`) REFERENCES `service_pay`(`ServicePayId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
+ALTER TABLE `service_pay_log` ADD `ServiceGroupId` BIGINT(15) NOT NULL AFTER `ServicePayId`, ADD `ServiceSubGroupId` BIGINT(15) NOT NULL AFTER `ServiceGroupId`;

@@ -40,12 +40,11 @@ const  insertClient = (req, res)  => {
                 });
             } else {
                 if (result[0][0].cnt == 0) {
-                    var query = "CALL `insertClient`(?,?,?,?,?,?,?,?,?,?,?,?)";
+                    var query = "CALL `insertClient`(?,?,?,?,?,?,?,?,?,?,?)";
                         DbConnect.query(query, [
                         data.GroupId,
                         data.ClientName,
                         data.ClientEmail,
-                        data.ClientCode,
                         data.GstNumber,
                         data.PanNumber,
                         data.AdharNumber,
@@ -72,14 +71,13 @@ const  insertClient = (req, res)  => {
                                             message: 'Something went wrong. Please try again'
                                         });
                                     } else {
-                                        var query = "CALL `insertClientLog`(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                                        var query = "CALL `insertClientLog`(?,?,?,?,?,?,?,?,?,?,?,?)";
                                         try {
                                            DbConnect.query(query, [
                                                 result[0].ClientId,
                                                 data.GroupId,
                                                 data.ClientName,
                                                 data.ClientEmail,
-                                                data.ClientCode,
                                                 data.GstNumber,
                                                 data.PanNumber,
                                                 data.AdharNumber,
@@ -199,14 +197,13 @@ const getClientById = (req, res) => {
 
 const updateClient = (req, res) => {
     var data = req.body;
-    var query = "CALL `updateClient`(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    var query = "CALL `updateClient`(?,?,?,?,?,?,?,?,?,?,?,?)";
     try {
         DbConnect.query(query, [
             data.ClientId,
             data.GroupId,
             data.ClientName,
             data.ClientEmail,
-            data.ClientCode,
             data.GstNumber,
             data.PanNumber,
             data.AdharNumber,
